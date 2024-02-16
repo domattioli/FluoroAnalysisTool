@@ -1,0 +1,22 @@
+# Ignore all .log files
+*.log
+
+# Ignore everything in the 'data' directory # But don't ignore the 'data/Example_DICOM_case' directory
+/data/*
+!/data/Example_DICOM_case/
+
+# Ignore code that people included in the RDSS that do not fit into the core functionality of the FluoroAnalysisTool
+!/lib/
+/src/*
+!/src/00-Startup/
+!/src/01-Data_Management/
+!/src/02-Procedures/
+!/src/04-Non_GUI_Dependent_Scripts/
+!/src/Helpers/
+
+# Not ready for prime time yet; eventually should *not* be ignored
+/src/03-Neural_Net_Models/
+
+# Ignore the subdirectories of the 'Projects' folder. This is user-specific data.
+/Projects/*
+

@@ -1,0 +1,1 @@
+function chosenSide = identifySideDHS(femoralNeckBisectors)

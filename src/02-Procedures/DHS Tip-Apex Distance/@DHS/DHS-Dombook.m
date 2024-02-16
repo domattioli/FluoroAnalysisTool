@@ -1,0 +1,195 @@
+classdef DHS < Procedure
+    %DHS Class for the Dynamic Hip-Screw Procedure.
+    %   DHS Class for more modularized code.
+    %   
+    %   See also PROCEDURE, PSHF, FLUORO.
+    %======================================================================
+    
+    properties ( GetAccess = public, SetAccess = public, Hidden = false )
+        Femur;
+        Wire;
+    end
+    
+    methods
+        function obj = DHS( varargin )
+            %DHS Construct an instance of this class
+            %   Detailed explanation goes here
+            %   
+            %   See also DHS/DELETE, PROCEDURE, PSHF.
+            %==============================================================
+            
+            if nargin > 0
+                p	= inputParser;
+                st  = dbstack;
+                constructorName = st(1).name;
+                p.FunctionName	=  constructorName( 1:strfind( constructorName, '.' ) - 1 );
+                p.addRequired( 'Parent', @(x) isa( x, 'Fluoro' ) );
+                p.addParameter( 'Femur', Femur( obj, 'Tag', 'DHS Femur' ), @(x) isa( x, 'Femur' ) );
+                p.addParameter( 'Wire', Wire( obj, 'Tag', 'DHS Wire' ), @(x) isa( x, 'Wire' ) );
+                p.addParameter( 'Tag', 'DHS', @(x) ischar( x ) );
+                p.parse( varargin{:} );
+                narginchk( 0 , numel( p.Parameters )*2 - 1 );
+                props = fieldnames( p.Results );
+                for n = 1:numel( props )
+                    try
+                        obj.( props{ n } ) = p.Results.( props{ n } );
+                    catch
+                        obj.set( props{ n }, p.Results.( props{ n } ) );
+                    end
+                end
+            end
+            obj.set( 'Name', 'DHS Tip-Apex Distance' );
+        end
+        
+        function result = compileResult( obj )
+            %COMPILERESULT Compile results from stored data in object.
+            %   result = COMPILERESULT( obj ) returns a struct containing
+            %   the minimum information for the femoral head, femoral neck,
+            %   femoral neck bisector, and the wire.
+            %   
+            %   See also DHS, SAVEDATA.
+            %==============================================================
+            
+            femur   = obj.get( 'Femur' );
+            wire    = obj.get( 'Wire' );
+            result  = struct( 'Femoral_Head', [], 'Femoral_Neck', [], 'Wire', [] );
+            if ~isempty( femur )
+                if ~isempty( femur.get( 'Head' ).get( 'Boundary' ) )
+                    result.Femoral_Head = simplifyEllipse( femur.get( 'Head' ).get( 'Boundary' ) );
+                end
+                if ~isempty( femur.get( 'Neck' ).get( 'Boundary' ) )
+                    result.Femoral_Neck	= round( femur.get( 'Neck' ).get( 'Boundary' ), 1 );
+                end
+            end
+            if ~isempty( wire )
+                wire_struct = struct( 'XY', [], 'PX_Width', [], 'MM_Width', [] );
+                if ~isempty( wires.get( 'Boundary' ) )
+                    wiresEQ	= wires.get( 'Equation' );
+                    for idx = 1:numel( wires )
+                        wire_struct( idx ).XY = round( wiresEQ{ idx }( 0:.1:1 ), 2 );
+                        wire_struct( idx ).PX_Width	= round( wires( idx ).get( 'WidthPX' ), 2);
+                        wire_struct( idx ).MM_Width = wires( idx ).get( 'WidthMM' );
+                    end
+                end
+                result.Wire	= wire_struct;
+            end
+        end
+        
+        function delete( obj )
+            %DELETE Destructor for DHS object.
+            %   DELETE( obj ) deletes DHS plots and data.
+            %
+            %   See also DHS.
+            %==============================================================
+            
+            femur	= obj.get( 'Femur' );
+            wire    = obj.get( 'Wire' );
+            plts    = [];
+            if ~isempty( femur )
+                if ~strcmpi( femur.get( 'Display' ), 'off' )
+                    plts	= femur.get( 'Display' );
+                end
+            end
+            if ~isempty( wire )
+                if ~strcmpi( wire.get( 'Display' ), 'off' )
+                    plts	= vertcat( plts, wire.get( 'Display' ) );
+                end
+            end
+            for idx = 1:length( plts )
+                delete( plts( idx ) );
+            end
+            delete( obj );
+        end
+        
+        function [TAD, Theta] = evaluate( obj )
+            %EVALUATE Computes distance of wire tip to apex.
+            %   TAD = EVALUATE( obj ) returns euclidean distance between
+            %   the wire's tip and the tip-apex of the femoral head as a
+            %   floating point double. Note that this distance is only with
+            %   respect to the plane defined in the current image (this is
+            %   not a 3D measurement).
+            %   
+            %   [TAD, Theta] = EVALUATE( obj ) also returns the angle
+            %   difference between the femoral neck bisector and the wire.
+            %   
+            %   See also DHS, FEMUR/DEFINEHEAD, WIRE/DEFINEWIRE.
+            %==============================================================
+            
+            % Do not proceed without the tip-apex and wire-tip coordinates.
+            narginchk( 1, 2 );
+            TAD	= struct( 'px', NaN, 'mm', NaN, 'in', NaN );
+            Theta   = NaN;
+            femur   = obj.get( 'Femur' );
+            wire    = obj.get( 'Wire' );
+            if any( isnan( femur.get( 'TipApex' ) ) ) || isempty( wire.get( 'WidthPX' ) )
+                return
+            end
+
+            % Compute euclidean distance (in [pixels]) between wireTipXY and tipApexXY.
+%             wireXY  = wire.generateXY();
+            wireXY  = vertcat( wire.get( 'Base' ), wire.get( 'Tip' ) );
+            TAD.px	= pdist( vertcat( wireXY( 2, : ), femur.get( 'TipApex' ) ), 'euclidean' );
+            TAD.mm	= TAD.px / wire.getRatio();
+            TAD.in  = TAD.mm*( 1/25.4 );
+            
+            % Compute angle between xyWireTip and xyTipApex.
+            del_xyWire	= diff( wireXY );
+            bisector    = femur.neckPerpendicularBisector( obj.get( 'Parent' ).get( 'Side' ) );
+            del_xyNeckBisector	= diff( bisector, 1 );
+            mWire   = abs( del_xyWire( 2 ) / del_xyWire( 1 ) );
+            mNeckBisector = abs( del_xyNeckBisector( 2 ) / del_xyNeckBisector( 1 ) );
+            Theta   = round( abs( atand( mWire ) - atand( mNeckBisector ) ), 1 );
+        end
+        
+        function resetProcedure( obj )
+            %RESETPROCEDURE Reset state of DHS object to default.
+            %	RESETPROCEDURE( obj ) returns the updated object with its
+            %	Femur and Wire objects returned to their default value.
+            %   
+            %   See also DHS, RESETFEMUR, RESETWIRE.
+            %==============================================================
+            
+            obj.resetFemur();
+            obj.resetWire();
+            obj.resetChildren();
+            obj.resetParent();
+        end
+        function resetFemur( obj )
+            %RESETFEMUR Reset Femur field of the DHS object.
+            %   RESETFEMUR( obj ) returns the updated object with its
+            %	'Femur' field returned to its default value.
+            %   
+            %   See also DHS, RESETPROCEDURE, RESETWIRE, RESETTAG.
+            %==============================================================
+            
+            if ~isempty( obj.get( 'Femur' ) )
+                obj.get( 'Femur' ).delete()
+            end
+            obj.set( 'Femur', Femur( obj ) ); %#ok<CPROP>
+        end
+        function resetWire( obj )
+            %RESETWIRE Reset Wire field of the DHS object.
+            %   RESETWIRE( obj ) returns the updated object with its
+            %	'Femur' field returned to its default value.
+            %   
+            %   See also DHS, RESETPROCEDURE, RESETFEMUR, RESETTAG.
+            %==============================================================
+            
+            if ~isempty( obj.get( 'Wire' ) )
+                obj.get( 'Wire' ).delete()
+            end
+            obj.set( 'Wire', Wire( obj ) ); %#ok<CPROP>
+        end
+        function resetTag( obj )
+            %RESETTAG Reset Tag field of the DHS object.
+            %   RESETTAG( obj ) returns the updated object with its
+            %	'Tag' field returned to its default value.
+            %   
+            %   See also DHS, RESETPROCEDURE, RESETFEMUR, RESETWIRE.
+            %==============================================================
+            
+            obj.set( 'Tag', 'DHS' );
+        end
+    end
+end
+

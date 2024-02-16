@@ -1,0 +1,20 @@
+{"CaseID":"Z:\\Anderson_Colaborations\\AHRQ - 11287500\\FluoroAnalysisTool\\data\\Example_DICOM_Case","FileName":"IM-0001-0020","Surgeon":"Unknown","DateTimeStamp":"09-Jan-2016 15:11:36","View":"AP","Procedure":"DHS Tip-Apex Distance","Result":{"Femoral_Head":{"Left_XY":[545.74,356.33],"Top_XY":[687.8,478.85],"Center_XY":[687.8,356.33]},"Femoral_Neck":[[589.9,351.7],[744,563.9]],"Wire":{"XY":[],"PX_Width":[],"MM_Width":[]}},"Side":"Right","Tag":"Fluoro: 1","User":[],"Modified":"09-Aug-2022 16:07:04"}
+
+{"CaseID":"/Users/dominik/OneDrive - University of Iowa/AHRQ_POSNA/FluoroAnalysisTool/data/Example_DICOM_Case","FileName":"IM-0001-0022","Surgeon":"Unknown","DateTimeStamp":"09-Jan-2016 15:12:13","View":"AP","Procedure":"DHS Tip-Apex Distance","Result":{"Femoral_Head":{"Left_XY":[540.23,348.71],"Top_XY":[673.76,473.85],"Center_XY":[673.76,348.71]},"Femoral_Neck":[[540.2,348.7],[656.8,472]],"Wire":{"XY":[[325,665],[328.75,660.25],[333.2,655.8],[337.65,651.35],[341.4,646.6],[345.85,642.15],[350.31,637.69],[354.05,632.95],[358.51,628.49],[362.96,624.04],[367,620]],"PX_Width":16.1,"MM_Width":2.5}},"Side":"Right","Tag":"Fluoro: 1","User":[],"Modified":"20-Aug-2020 12:27:14"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
