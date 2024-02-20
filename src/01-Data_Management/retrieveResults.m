@@ -1,7 +1,20 @@
-function data	= retrieveResults(fullFileName)
+function data = retrieveResults( fullFileName )
+%RETRIEVERESULTS Parse .json file, blinded to procedure type.
+%   data = RETRIEVERESULTS( fullFileName ) returns a 1xN struct array
+%   containing the derived data about each fluoroshot of the inputted
+%   result file. The inputted fullFileName must be a strinng in the format
+%   of path-file-ext. Only one file may be processed at a time; if you have
+%   multiple result files, call this function within a loop.
+%   
+%   See also WRITERESULT, JSON2TABLEDHS, JSON2TABLEPSHF.
+%==========================================================================
+
+narginchk( 1, 1 );
+nargoutchk( 0, 1 );
+assert( size( fullFileName, 1 ) == 1, 'Only one full file name can be inputted at a time; your input is being interpretted as several full file names.')
 
 % Add folder of fileName to path.
-[pathName, ~, ~]	= fileparts(fullFileName);
+[pathName, ~, ~]	= fileparts( fullFileName );
 addpath(genpath(pathName))
 
 % Count lines in results text to determine output array length.

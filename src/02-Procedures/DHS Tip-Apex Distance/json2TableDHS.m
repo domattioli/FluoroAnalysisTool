@@ -44,7 +44,7 @@ if nargin == 2
 else
     saveAsXLSX  = false;
 end
-nargoutchk( 1, 2 );
+nargoutchk( 0, 2 );
 
 % Initiate table output first as a cell.
 cellT = { 'CaseID', 'FileName', 'Side', 'View',...

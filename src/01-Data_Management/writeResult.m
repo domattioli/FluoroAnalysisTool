@@ -4,7 +4,7 @@ function fid = writeResult( fh, saveFullFileName, TEXT )
 %   identifier fid, the values of which correspond to classic file MATLAB.
 %   interaction.
 %   
-%   See also FOPEN, FWRITE, FLUORO/SAVE.
+%   See also FOPEN, FWRITE, FLUORO/SAVE, RETRIEVERESULTS.
 %==========================================================================
 
 % Get figure handles and fluoro data.

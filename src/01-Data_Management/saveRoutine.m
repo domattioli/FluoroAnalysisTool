@@ -3,7 +3,7 @@ function returnOut = saveRoutine( fh, fhHandles, data, out, dataStruct )
 %   returnOut = SAVEROUTINE(fh, fhHandles, data, out, dataStruct) returns 0
 %   if save successful. Otherwise, returns 1.
 %   
-%   See also SAVEDATA, SAVEDHS, SAVEPSHF.
+%   See also SAVEDATA, SAVEDHS, SAVEPSHF, WRITERESULT.
 %==========================================================================
 
 try

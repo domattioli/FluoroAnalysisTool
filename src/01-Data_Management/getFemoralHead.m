@@ -14,6 +14,12 @@ function [x, y] = getFemoralHead(femoralHead)
 %==========================================================================
 
 
+%--------------------------------------------------------------------------
+% Feb 19, 2024 -- Dom observation -- looks like some code used to exist
+% here but was erroneously deleted. I am noticing that the inputtted
+% 'femoralHead' variable is not being used.
+%--------------------------------------------------------------------------
+
 
 if strcmpi(neckOrBisector, 'Both')
     x   = struct('Neck', femoralNeck.NeckPlot.get('XData')',...

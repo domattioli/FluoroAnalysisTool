@@ -65,6 +65,7 @@ classdef Fluoro < FluoroObject
                 for n = 1:numel( props )
                     obj.( props{ n } ) = p.Results.( props{ n } );
                 end
+
                 if ~isempty( obj.FileName )
                     if size( obj.Image, 3 ) == 3
                         obj.Image   = rgb2gray( obj.Image );
@@ -388,6 +389,8 @@ classdef Fluoro < FluoroObject
                     continue
                 end
                 f	= jsondecode( txt{ idx } );
+                assert( exist( f.CaseID, 'file' ), ['Inputted fullfilename does not exist. You entered: ', f.CaseID ] )
+                
                 data	= Fluoro( f.FileName, 'CaseID', f.CaseID, 'Side', f.Side,...
                     'Surgeon', f.Surgeon, 'Tag', f.Tag, 'User', f.User, 'View', f.View );
                 
