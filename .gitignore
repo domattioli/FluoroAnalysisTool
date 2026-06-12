@@ -20,3 +20,13 @@
 # Ignore the subdirectories of the 'Projects' folder. This is user-specific data.
 /Projects/*
 
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+.venv/
+.streamlit/secrets.toml

@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fluoroanalysis"
+version = "0.1.0"
+description = "Fluoroscopic image annotation and surgical metric analysis (Python port of FluoroAnalysisTool)"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "pydicom>=2.4",
+    "Pillow>=10.0",
+    "streamlit>=1.33",
+    "streamlit-image-coordinates>=0.1.6",
+    "pandas>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7",
+    "ruff>=0.4",
+]
+
+[tool.setuptools]
+packages = ["fluoroanalysis", "fluoroanalysis.geometry", "fluoroanalysis.imaging", "fluoroanalysis.io", "fluoroanalysis.procedures"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = ["E501"]
