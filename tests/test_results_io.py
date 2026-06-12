@@ -7,6 +7,7 @@ import pytest
 from fluoroanalysis.io.results import (
     FluoroRecord,
     dhs_table_rows,
+    find_results_file,
     load_results,
     parse_dhs_result,
     save_record,
@@ -188,3 +189,27 @@ class TestResultsIO:
         assert row["WWpx"] == 10
         assert row["WWmm"] == 2
         assert row["Analyst"] == "analyst1"
+
+    def test_find_results_file_empty_dir(self, tmp_path):
+        """Empty dir → default."""
+        assert find_results_file(tmp_path) == tmp_path / "Results.json"
+
+    def test_find_results_file_legacy(self, tmp_path):
+        """Legacy file found."""
+        legacy = tmp_path / "MyCase_Results.json"
+        legacy.write_text("")
+        assert find_results_file(tmp_path) == legacy
+
+    def test_find_results_file_prefers_canonical(self, tmp_path):
+        """Canonical name preferred over legacy."""
+        legacy = tmp_path / "MyCase_Results.json"
+        legacy.write_text("")
+        default = tmp_path / "Results.json"
+        default.write_text("")
+        assert find_results_file(tmp_path) == default
+
+    def test_find_results_file_example_case(self):
+        """Locate example case legacy results file."""
+        case = Path("/home/user/FluoroAnalysisTool/data/Example_DICOM_Case")
+        found = find_results_file(case)
+        assert found.name == "Example_DICOM_Case_Results.json"

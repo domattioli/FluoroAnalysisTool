@@ -93,6 +93,22 @@ class FluoroRecord:
         )
 
 
+def find_results_file(case_dir: str | Path) -> Path:
+    """Locate the results file for a case directory.
+
+    Prefers `Results.json`; falls back to the first `*_Results.json`
+    (legacy MATLAB naming); defaults to `Results.json` for new writes.
+    """
+    case_dir = Path(case_dir)
+    default = case_dir / "Results.json"
+    if default.exists():
+        return default
+    legacy = sorted(case_dir.glob("*_Results.json"))
+    if legacy:
+        return legacy[0]
+    return default
+
+
 def load_results(path: str | Path) -> list[FluoroRecord]:
     """
     Load results from JSON-lines file.
