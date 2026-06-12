@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from .primitives import Point, perpendicular_slope
+from .primitives import Point
 
 
 @dataclass(frozen=True)

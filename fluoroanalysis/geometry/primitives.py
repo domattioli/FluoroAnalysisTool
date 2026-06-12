@@ -1,6 +1,5 @@
 """Geometric primitives: points, lines, distances, angles."""
 
-import math
 from collections.abc import Sequence
 
 import numpy as np

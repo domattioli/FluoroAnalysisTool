@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 from typing import ClassVar
 
-
 PROCEDURE_NAMES = ("DHS Tip-Apex Distance", "Pediatric Supracondylar Humerus Fracture")
 
 

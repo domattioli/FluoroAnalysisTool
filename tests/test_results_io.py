@@ -1,7 +1,5 @@
 """Tests for results I/O."""
 
-import json
-import tempfile
 from pathlib import Path
 
 import pytest
@@ -12,7 +10,6 @@ from fluoroanalysis.io.results import (
     load_results,
     parse_dhs_result,
     save_record,
-    serialize_dhs_result,
 )
 
 

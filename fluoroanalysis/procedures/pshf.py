@@ -56,7 +56,7 @@ class PSHFProcedure(Procedure):
 
         # Compute intersections with fracture for each wire
         intersections = []
-        for i, wire in enumerate(self.wires):
+        for wire in self.wires:
             # Resample wire polyline to 200 points
             resampled = resample_polyline(wire.points, 200)
             # Find intersections

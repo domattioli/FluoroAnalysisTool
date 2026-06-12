@@ -4,7 +4,6 @@ import json
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 from ..geometry.ellipse import Ellipse
 from ..geometry.primitives import Point
