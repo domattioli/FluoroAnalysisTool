@@ -1,5 +1,36 @@
 # FluoroAnalysisTool README
-## Description of code directory:
+
+## Python + Streamlit version (2026)
+
+FluoroAnalysisTool is a Streamlit app for annotating orthopedic fluoroscopy DICOMs and computing surgical metrics. Two procedures supported: DHS Tip-Apex Distance and Pediatric Supracondylar Humerus Fracture (PSHF). Click points on the image; the app fits geometry, computes metrics live, and saves results to JSON.
+
+### Quickstart
+```bash
+pip install -e .
+streamlit run streamlit_app.py
+```
+
+Then load an example case or upload DICOMs. Results are saved to `Results.json` in the case directory (legacy-MATLAB compatible).
+
+### Project structure
+- `fluoroanalysis/` — core library (geometry, imaging, DICOM/results I/O, procedures)
+- `fluoroanalysis/ui/` — Streamlit UI layer: app, state, annotation canvas, DHS/PSHF pages, results table
+- `streamlit_app.py` — Entry point
+- `data/Example_DICOM_Case/` — Bundled example
+- `tests/` — pytest suite for the core library (new in the port)
+
+### Tests
+```bash
+pytest -q
+```
+
+### Deploy
+On Streamlit Community Cloud: point to `streamlit_app.py` as entry point. Requires Python 3.11+. See `doc/PYTHON_PORT_PLAN.md` for detailed specifications.
+
+### ⚠️ PHI Notice
+De-identify DICOMs before uploading to a hosted instance.
+
+## Description of code directory (legacy MATLAB):
 - 'data' is intended to be example analysis. TBD.
 - 'doc' is intended to be instructions/manual. TBD.
 - 'lib' contains source-code downloaded from the internet to serve abstract purposes within the FluoroAnalysisTool.
