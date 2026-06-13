@@ -13,13 +13,16 @@ from fluoroanalysis.io.results import (
     save_record,
 )
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+EXAMPLE_CASE_DIR = REPO_ROOT / "data" / "Example_DICOM_Case"
+
 
 class TestResultsIO:
     """Test results loading and saving."""
 
     def test_load_example_results(self):
         """Test loading real example results file."""
-        results_path = Path("/home/user/FluoroAnalysisTool/data/Example_DICOM_Case/Example_DICOM_Case_Results.json")
+        results_path = EXAMPLE_CASE_DIR / "Example_DICOM_Case_Results.json"
         records = load_results(results_path)
         assert len(records) == 2
 
@@ -35,7 +38,7 @@ class TestResultsIO:
 
     def test_parse_dhs_result_legacy(self):
         """Test parsing legacy DHS result."""
-        results_path = Path("/home/user/FluoroAnalysisTool/data/Example_DICOM_Case/Example_DICOM_Case_Results.json")
+        results_path = EXAMPLE_CASE_DIR / "Example_DICOM_Case_Results.json"
         records = load_results(results_path)
 
         # Parse first record (no wire, just head and neck)
@@ -210,6 +213,5 @@ class TestResultsIO:
 
     def test_find_results_file_example_case(self):
         """Locate example case legacy results file."""
-        case = Path("/home/user/FluoroAnalysisTool/data/Example_DICOM_Case")
-        found = find_results_file(case)
+        found = find_results_file(EXAMPLE_CASE_DIR)
         assert found.name == "Example_DICOM_Case_Results.json"

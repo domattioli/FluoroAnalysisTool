@@ -9,21 +9,22 @@ import pytest
 from fluoroanalysis.imaging.enhance import histogram_equalize, invert, to_pil_rgb, to_uint8
 from fluoroanalysis.io.dicom import deidentify, list_case_files, load_dicom
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+EXAMPLE_CASE_DIR = REPO_ROOT / "data" / "Example_DICOM_Case"
+
 
 class TestDICOMIO:
     """Test DICOM loading."""
 
     def test_list_case_files(self):
         """Test listing case files."""
-        case_dir = Path("/home/user/FluoroAnalysisTool/data/Example_DICOM_Case")
-        files = list_case_files(case_dir)
+        files = list_case_files(EXAMPLE_CASE_DIR)
         assert len(files) > 0
         assert all(f.suffix.lower() == ".dcm" for f in files)
 
     def test_load_dicom_basic(self):
         """Test loading a DICOM file."""
-        case_dir = Path("/home/user/FluoroAnalysisTool/data/Example_DICOM_Case")
-        dcm_files = sorted(list_case_files(case_dir))
+        dcm_files = sorted(list_case_files(EXAMPLE_CASE_DIR))
         assert len(dcm_files) > 0
 
         img = load_dicom(dcm_files[0])
@@ -38,8 +39,7 @@ class TestDICOMIO:
 
     def test_deidentify(self):
         """Test DICOM deidentification."""
-        case_dir = Path("/home/user/FluoroAnalysisTool/data/Example_DICOM_Case")
-        dcm_files = list_case_files(case_dir)
+        dcm_files = list_case_files(EXAMPLE_CASE_DIR)
         if len(dcm_files) == 0:
             pytest.skip("No DICOM files available")
 
